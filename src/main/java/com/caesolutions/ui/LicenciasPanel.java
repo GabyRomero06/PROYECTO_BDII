@@ -81,7 +81,7 @@ public class LicenciasPanel extends JPanel {
 
         // Table
         tableModel = new DefaultTableModel(new Object[]{
-            "ID", "Cliente", "Sistema", "Plan", "Adquisición", "Próximo Pago", "Estado", "Precio", "Recargo"
+            "ID", "CLIENTE", "PLAN ASIGNADO", "<html>FECHA<br>INICIO</html>", "<html>PRÓXIMO<br>PAGO</html>", "<html>DEUDA<br>(MESES)</html>", "<html>TOTAL DEUDA<br>+ RECARGOS</html>", "ESTADO", "ACCIONES"
         }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -90,29 +90,48 @@ public class LicenciasPanel extends JPanel {
         };
         table = new JTable(tableModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setRowHeight(40);
+        table.setRowHeight(50);
         table.getTableHeader().setReorderingAllowed(false);
+        table.setDefaultRenderer(Object.class, new com.caesolutions.util.AntigravityCellRenderer());
+        table.getTableHeader().setDefaultRenderer(new com.caesolutions.util.AntigravityHeaderRenderer());
+        
+        table.setOpaque(false);
+        table.setBackground(new Color(0, 0, 0, 0));
         
         table.putClientProperty(FlatClientProperties.STYLE, 
             "showHorizontalLines: true; " +
             "showVerticalLines: false; " +
             "intercellSpacing: 0,0; " +
-            "selectionBackground: #334155; " + // Slate 700
-            "selectionForeground: #F8FAFC;"
+            "background: null; " +
+            "foreground: #F8FAFC; " +
+            "selectionBackground: null; " + 
+            "selectionForeground: null; " +
+            "gridColor: #1E3A8A;"
         );
+        table.getTableHeader().setOpaque(false);
+        table.getTableHeader().setBackground(new Color(0,0,0,0));
         table.getTableHeader().putClientProperty(FlatClientProperties.STYLE, 
-            "separatorColor: #1E293B; " +
-            "background: #1E293B; " +
-            "foreground: #94A3B8; " +
-            "font: bold;"
+            "separatorColor: #0B1727; " +
+            "background: null; " +
+            "foreground: null;"
         );
         
+        com.caesolutions.util.AntigravityContainer tableCard = new com.caesolutions.util.AntigravityContainer();
+        tableCard.setLayout(new BorderLayout());
+        
+        JPanel paddingPanel = new JPanel(new BorderLayout());
+        paddingPanel.setOpaque(false);
+        paddingPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.putClientProperty(FlatClientProperties.STYLE, 
-            "arc: 12; " +
-            "border: 1,1,1,1,#334155" // Slate 700 border
-        );
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setOpaque(false);
+        
+        paddingPanel.add(scrollPane, BorderLayout.CENTER);
+        tableCard.add(paddingPanel, BorderLayout.CENTER);
+        
+        contentPanel.add(tableCard, BorderLayout.CENTER);
     }
     
     private JButton createStyledButton(String text, String bg, String hoverBg) {
@@ -145,16 +164,22 @@ public class LicenciasPanel extends JPanel {
                 try {
                     List<Licencia> licencias = get();
                     for (Licencia l : licencias) {
+                        String clienteHtml = "<html><b>" + l.getNombreCliente() + "</b><br><span style='font-size:10px; font-weight:normal; color:#94A3B8'>" + l.getIdCliente() + "</span></html>";
+                        String fechaInicio = new java.text.SimpleDateFormat("yyyy-MM-dd").format(l.getFechaAdquisicion());
+                        String proxPago = new java.text.SimpleDateFormat("yyyy-MM-dd").format(l.getFechaProximoPago());
+                        String deudaStr = l.getDeudaMeses() + " meses";
+                        String totalDeuda = "L " + String.format("%.2f", l.getPrecioAcordado() + l.getRecargoAplicado());
+
                         tableModel.addRow(new Object[]{
                             l.getIdLicencia(),
-                            l.getNombreCliente(),
-                            l.getNombreSistema(),
+                            clienteHtml,
                             l.getNombrePlan(),
-                            l.getFechaAdquisicion(),
-                            l.getFechaProximoPago(),
+                            fechaInicio,
+                            proxPago,
+                            deudaStr,
+                            totalDeuda,
                             l.getEstado(),
-                            l.getPrecioAcordado(),
-                            l.getRecargoAplicado()
+                            "" // Badge will be drawn by renderer
                         });
                     }
                     cardLayout.show(LicenciasPanel.this, "CONTENT");

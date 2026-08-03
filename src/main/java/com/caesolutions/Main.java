@@ -16,10 +16,10 @@ public class Main {
         // Inicializar el Look and Feel moderno (FlatMacDarkLaf)
         FlatMacDarkLaf.setup();
         
-        // Configuraciones globales para aspecto Web/Moderno
-        UIManager.put("Component.arc", 12);
-        UIManager.put("Button.arc", 12);
-        UIManager.put("ProgressBar.arc", 12);
+        // Configuraciones globales para aspecto Web/Moderno Antigravity
+        UIManager.put("Component.arc", 999);
+        UIManager.put("Button.arc", 999); // Botones estilo pastilla perfecta
+        UIManager.put("ProgressBar.arc", 999);
         UIManager.put("TextComponent.arc", 12);
         UIManager.put("Component.focusWidth", 2);
         UIManager.put("Component.innerFocusWidth", 0);

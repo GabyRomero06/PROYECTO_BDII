@@ -69,34 +69,54 @@ public class HomePanel extends JPanel {
         tablesPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         // Panel de Licencias Activas
-        JPanel pnlLicencias = new JPanel(new BorderLayout(10, 10));
-        pnlLicencias.putClientProperty(FlatClientProperties.STYLE, "background: #1E293B; arc: 20; border: 20,20,20,20;");
+        com.caesolutions.util.AntigravityContainer pnlLicencias = new com.caesolutions.util.AntigravityContainer();
+        pnlLicencias.setLayout(new BorderLayout(10, 10));
+        
+        JPanel pnlLicPadding = new JPanel(new BorderLayout(10, 10));
+        pnlLicPadding.setOpaque(false);
+        pnlLicPadding.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
         JLabel lblLicTitle = new JLabel("Licencias Activas");
         lblLicTitle.setFont(new Font("Inter", Font.BOLD, 18));
         lblLicTitle.setForeground(Color.decode("#F8FAFC"));
-        pnlLicencias.add(lblLicTitle, BorderLayout.NORTH);
+        pnlLicPadding.add(lblLicTitle, BorderLayout.NORTH);
 
         modeloLicencias = new DefaultTableModel(new Object[]{"CLIENTE", "PLAN", "ESTADO"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tablaLicencias = createStyledTable(modeloLicencias);
-        pnlLicencias.add(new JScrollPane(tablaLicencias), BorderLayout.CENTER);
+        JScrollPane scrollLicencias = new JScrollPane(tablaLicencias);
+        scrollLicencias.setBorder(BorderFactory.createEmptyBorder());
+        scrollLicencias.setOpaque(false);
+        scrollLicencias.getViewport().setOpaque(false);
+        pnlLicPadding.add(scrollLicencias, BorderLayout.CENTER);
+        pnlLicencias.add(pnlLicPadding, BorderLayout.CENTER);
 
         // Panel de Tickets Recientes
-        JPanel pnlTickets = new JPanel(new BorderLayout(10, 10));
-        pnlTickets.putClientProperty(FlatClientProperties.STYLE, "background: #1E293B; arc: 20; border: 20,20,20,20;");
+        com.caesolutions.util.AntigravityContainer pnlTickets = new com.caesolutions.util.AntigravityContainer();
+        pnlTickets.setLayout(new BorderLayout(10, 10));
+        
+        JPanel pnlTickPadding = new JPanel(new BorderLayout(10, 10));
+        pnlTickPadding.setOpaque(false);
+        pnlTickPadding.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
         JLabel lblTickTitle = new JLabel("Tickets Recientes");
         lblTickTitle.setFont(new Font("Inter", Font.BOLD, 18));
         lblTickTitle.setForeground(Color.decode("#F8FAFC"));
-        pnlTickets.add(lblTickTitle, BorderLayout.NORTH);
+        pnlTickPadding.add(lblTickTitle, BorderLayout.NORTH);
 
         modeloTickets = new DefaultTableModel(new Object[]{"ASUNTO", "ESTADO"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tablaTickets = createStyledTable(modeloTickets);
-        pnlTickets.add(new JScrollPane(tablaTickets), BorderLayout.CENTER);
+        JScrollPane scrollTickets = new JScrollPane(tablaTickets);
+        scrollTickets.setBorder(BorderFactory.createEmptyBorder());
+        scrollTickets.setOpaque(false);
+        scrollTickets.getViewport().setOpaque(false);
+        pnlTickPadding.add(scrollTickets, BorderLayout.CENTER);
+        pnlTickets.add(pnlTickPadding, BorderLayout.CENTER);
 
         tablesPanel.add(pnlLicencias);
         tablesPanel.add(pnlTickets);
@@ -106,14 +126,25 @@ public class HomePanel extends JPanel {
 
     private JTable createStyledTable(DefaultTableModel model) {
         JTable table = new JTable(model);
-        table.setRowHeight(35);
+        table.setRowHeight(50);
         table.setShowGrid(false);
-        table.setIntercellSpacing(new Dimension(0, 0));
+        table.setIntercellSpacing(new Dimension(0, 15));
+        
+        table.setOpaque(false);
+        table.setBackground(new Color(0, 0, 0, 0));
+        
+        table.setDefaultRenderer(Object.class, new com.caesolutions.util.AntigravityCellRenderer());
+        table.getTableHeader().setDefaultRenderer(new com.caesolutions.util.AntigravityHeaderRenderer());
+        
         table.putClientProperty(FlatClientProperties.STYLE, 
-            "selectionBackground: #334155; selectionForeground: #F8FAFC; background: #1E293B; foreground: #94A3B8;"
+            "selectionBackground: null; selectionForeground: null; background: null; foreground: #F8FAFC;" +
+            "showHorizontalLines: true; showVerticalLines: false; gridColor: #1E3A8A;"
         );
+        
+        table.getTableHeader().setOpaque(false);
+        table.getTableHeader().setBackground(new Color(0,0,0,0));
         table.getTableHeader().putClientProperty(FlatClientProperties.STYLE, 
-            "background: #1E293B; foreground: #F8FAFC; font: bold; separatorColor: #334155;"
+            "background: null; foreground: null; separatorColor: #0B1727;"
         );
         return table;
     }

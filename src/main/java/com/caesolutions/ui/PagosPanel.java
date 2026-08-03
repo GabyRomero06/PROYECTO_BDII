@@ -77,29 +77,48 @@ public class PagosPanel extends JPanel {
         };
         table = new JTable(tableModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setRowHeight(40);
+        table.setRowHeight(50);
         table.getTableHeader().setReorderingAllowed(false);
+        table.setDefaultRenderer(Object.class, new com.caesolutions.util.AntigravityCellRenderer());
+        table.getTableHeader().setDefaultRenderer(new com.caesolutions.util.AntigravityHeaderRenderer());
+        
+        table.setOpaque(false);
+        table.setBackground(new Color(0, 0, 0, 0));
         
         table.putClientProperty(FlatClientProperties.STYLE, 
             "showHorizontalLines: true; " +
             "showVerticalLines: false; " +
             "intercellSpacing: 0,0; " +
-            "selectionBackground: #334155; " + // Slate 700
-            "selectionForeground: #F8FAFC;"
+            "background: null; " +
+            "foreground: #F8FAFC; " +
+            "selectionBackground: null; " + 
+            "selectionForeground: null; " +
+            "gridColor: #1E3A8A;"
         );
+        table.getTableHeader().setOpaque(false);
+        table.getTableHeader().setBackground(new Color(0,0,0,0));
         table.getTableHeader().putClientProperty(FlatClientProperties.STYLE, 
-            "separatorColor: #1E293B; " +
-            "background: #1E293B; " +
-            "foreground: #94A3B8; " +
-            "font: bold;"
+            "separatorColor: #0B1727; " +
+            "background: null; " +
+            "foreground: null;"
         );
         
+        com.caesolutions.util.AntigravityContainer tableCard = new com.caesolutions.util.AntigravityContainer();
+        tableCard.setLayout(new BorderLayout());
+        
+        JPanel paddingPanel = new JPanel(new BorderLayout());
+        paddingPanel.setOpaque(false);
+        paddingPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.putClientProperty(FlatClientProperties.STYLE, 
-            "arc: 12; " +
-            "border: 1,1,1,1,#334155" // Slate 700 border
-        );
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setOpaque(false);
+        
+        paddingPanel.add(scrollPane, BorderLayout.CENTER);
+        tableCard.add(paddingPanel, BorderLayout.CENTER);
+        
+        contentPanel.add(tableCard, BorderLayout.CENTER);
     }
 
     private JButton createStyledButton(String text, String bg, String hoverBg) {
